@@ -6,6 +6,7 @@ import './index.css';
 
 const App = () => {
   const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedChapter, setSelectedChapter] = useState(1); // ✅ default pasal 1
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -32,13 +33,22 @@ const App = () => {
   };
 
   const handleSelectBook = (bookId) => {
-    console.log('BookId diterima di App.jsx:', bookId);
     setSelectedBook(bookId);
+    setSelectedChapter(1); // ✅ reset ke pasal 1 saat kitab dipilih
+  };
+
+  const handleNextChapter = () => setSelectedChapter((prev) => prev + 1);
+  const handlePrevChapter = () => {
+    if (selectedChapter > 1) setSelectedChapter((prev) => prev - 1);
+  };
+
+  const handleBackToBooks = () => {
+    setSelectedBook(null);
+    setSelectedChapter(1);
   };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
-      {/* Kirim props darkMode dan toggleDarkMode ke Header */}
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 
       {!selectedBook ? (
@@ -46,17 +56,33 @@ const App = () => {
       ) : (
         <div className="p-4">
           <button
-            onClick={() => {
-              console.log('Kembali ke daftar kitab');
-              setSelectedBook(null);
-            }}
+            onClick={handleBackToBooks}
             className="mb-4 px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
             ← Kembali ke daftar kitab
           </button>
 
-          <h2 className="text-2xl font-bold mb-4">Kitab: {selectedBook}</h2>
-          <VerseList book={selectedBook} />
+          <h2 className="text-2xl font-bold mb-4">
+            Kitab: {selectedBook}, Pasal: {selectedChapter}
+          </h2>
+
+          <div className="flex items-center gap-4 mb-4">
+            <button
+              onClick={handlePrevChapter}
+              disabled={selectedChapter === 1}
+              className="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-700 disabled:opacity-50"
+            >
+              ← Pasal Sebelumnya
+            </button>
+            <button
+              onClick={handleNextChapter}
+              className="px-3 py-1 rounded bg-gray-600 text-white hover:bg-gray-700"
+            >
+              Pasal Berikutnya →
+            </button>
+          </div>
+
+          <VerseList book={selectedBook} chapter={selectedChapter} />
         </div>
       )}
     </div>

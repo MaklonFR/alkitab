@@ -12,33 +12,58 @@ export default function AlkitabApp() {
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [verses, setVerses] = useState([]);
 
-  // Load semua kitab dan pasal saat awal mount
+  // 🚀 Load semua kitab saat awal mount
   useEffect(() => {
     setLoading(true);
     fetch('http://localhost:3000/api/alkitab/kitab')
-      .then((res) => res.json())
-      .then((data) => {
-        setKitabs(data);
+      .then(async (res) => {
+        const text = await res.text();
+        console.log('Kitab Response:', text);
+
+        try {
+          const data = JSON.parse(text);
+          setKitabs(data);
+        } catch (e) {
+          console.error('❌ Gagal parse JSON:', e.message);
+        }
+
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error('❌ Fetch error (kitab):', err.message);
+        setLoading(false);
+      });
   }, []);
 
-  // Fungsi untuk load ayat pada pasal tertentu
+  // 📘 Fungsi untuk load ayat dalam pasal tertentu
   const loadPasal = (bookId, chapter) => {
     setLoading(true);
     setSelectedBook(bookId);
     setSelectedChapter(chapter);
+
     fetch(`http://localhost:3000/api/alkitab/kitab/${bookId}/pasal/${chapter}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setVerses(data.verses);
+      .then(async (res) => {
+        const text = await res.text();
+        console.log('Pasal Response:', text);
+
+        try {
+          const data = JSON.parse(text);
+          setVerses(data);
+        } catch (e) {
+          console.error('❌ Gagal parse JSON (pasal):', e.message);
+          setVerses([]);
+        }
+
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error('❌ Fetch error (pasal):', err.message);
+        setLoading(false);
+        setVerses([]);
+      });
   };
 
-  // Fungsi kembali ke daftar kitab/pasal
+  // 🔙 Kembali ke daftar kitab
   const handleBack = () => {
     setSelectedBook(null);
     setSelectedChapter(null);
@@ -67,7 +92,11 @@ export default function AlkitabApp() {
             <h2 className="text-xl font-semibold mb-4">
               Kitab {selectedBook}, Pasal {selectedChapter}
             </h2>
-            <VerseList verses={verses} />
+            {verses.length > 0 ? (
+              <VerseList verses={verses} />
+            ) : (
+              <p className="text-red-500">Tidak ada ayat ditemukan.</p>
+            )}
           </div>
         )}
       </div>
