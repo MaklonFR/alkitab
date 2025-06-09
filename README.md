@@ -20,7 +20,7 @@ Aplikasi Alkitab sederhana yang dibangun dengan:
 ---
 
 ## 📂 Struktur Folder
-
+```bash
 alkitab/
 ├── backend/
 │ ├── alkitab.json
@@ -32,7 +32,7 @@ alkitab/
 │ └── package.json
 ├── package.json <-- root (opsional: untuk monorepo)
 └── README.md
-
+```
 
 ---
 
@@ -82,3 +82,6 @@ npm run build
 cd ../backend
 node server.js
 ````
+
+Sumber Data:
+https://github.com/sabdacode/ayt?utm_source=chatgpt.com
