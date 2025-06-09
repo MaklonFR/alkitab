@@ -2,10 +2,10 @@
   "name": "alkitab-backend",
   "version": "1.0.0",
   "description": "Backend API for Alkitab app using Express.js",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "Nama Kamu",
   "license": "MIT",
